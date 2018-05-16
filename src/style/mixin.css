@@ -1,0 +1,10 @@
+.ct {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.cl {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}

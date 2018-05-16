@@ -1,6 +1,10 @@
 # vue2_elm
 
-> A Vue.js project
+> Vue2 仿写饿了么
+
+## 技术栈
+
+vue2 + vuex + vue-router + webpack + ES6 + less + axios + svg
 
 ## Build Setup
 

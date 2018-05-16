@@ -2,7 +2,18 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from './router'
+import VueRouter from 'vue-router'
+import routes from './router/router'
+import './config/rem'
+import axios from 'axios'
+
+Vue.prototype.$http = axios
+
+Vue.use(VueRouter)
+
+const router = new VueRouter({
+  routes
+})
 
 Vue.config.productionTip = false
 

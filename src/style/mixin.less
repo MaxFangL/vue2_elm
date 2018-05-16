@@ -1,0 +1,34 @@
+// $blue: 蓝色背景色
+@blue: #3190e8;
+
+// 设置元素宽高
+.wh(@width, @height) {
+  width: @width;
+  height: @height;
+}
+
+// 定位垂直居中
+.ct {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+// 定位左右居中
+.cl {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+// 字体大小、颜色
+.sc(@size, @color) {
+  font-size: @size;
+  color: @color;
+}
+
+//flex 布局 和 子元素 对齐方式
+.fj(@type: space-between) {
+  display: flex;
+  justify-content: @type;
+}
