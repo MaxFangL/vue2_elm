@@ -1,5 +1,6 @@
 // $blue: 蓝色背景色
 @blue: #3190e8;
+@bc: #e4e4e4;
 
 // 设置元素宽高
 .wh(@width, @height) {
@@ -27,8 +28,30 @@
   color: @color;
 }
 
+// 字体大小、行高、微软雅黑字体
+.font(@size, @line-height, @family: 'Microsoft Yahei'){
+  font: @size/@line-height @family;
+}
+
 //flex 布局 和 子元素 对齐方式
 .fj(@type: space-between) {
   display: flex;
   justify-content: @type;
+}
+
+// 1px border 伪元素
+.after {
+  position: relative;
+}
+
+.after::after {
+  content: ' ';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e4e4e4;
+  -webkit-transform-origin: left bottom;
+  transform-origin: left bottom;
 }

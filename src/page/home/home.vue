@@ -1,7 +1,7 @@
 <template>
   <div>
     <head-top>
-      <span slot="logo" class="head_logo">elm</span>
+      <span slot="logo" class="head_logo" @click="reload">elm</span>
     </head-top>
 
     <nav class="city_nav">
@@ -10,9 +10,10 @@
         <span>定位不准时，请在城市列表中选择</span>
       </div>
 
-      <router-link class="guess_city">
+      <div class="guess_city">
         <span>武汉</span>
-      </router-link>
+        <span class="arrow_right"></span>
+      </div>
     </nav>
   </div>
 </template>
@@ -21,7 +22,8 @@
 import headTop from '../../components/header/head'
 export default {
   data () {
-
+    return {
+    }
   },
 
   mounted () {
@@ -30,6 +32,13 @@ export default {
 
   components: {
     headTop
+  },
+
+  methods: {
+    // 点击刷新页面
+    reload () {
+      window.location.reload()
+    }
   }
 }
 </script>
@@ -45,5 +54,34 @@ export default {
   }
   .city_nav {
     padding-top: 2.35rem;
+    background-color: #fff;
+    margin-bottom: 0.4rem;
+    border-top: 1px solid @bc;
+    > .city_tips {
+      .fj;
+      line-height: 1.45rem;
+      padding: 0 0.45rem;
+      > span:nth-of-type(1) {
+        .sc(0.55rem, #666);
+      }
+      > span:nth-of-type(2) {
+        .sc(0.475rem, #9f9f9f);
+      }
+    }
+    > .guess_city {
+      .fj;
+      // align-items: center;
+      height: 1.8rem;
+      padding: 0 0.45rem;
+      border-top: 1px solid @bc;
+      border-bottom: 2px solid @bc;
+      .font(0.75rem, 1.8rem);
+      > span:nth-of-type(1) {
+        color: @blue;
+      }
+      > .arrow_right {
+      }
+    }
   }
+
 </style>
