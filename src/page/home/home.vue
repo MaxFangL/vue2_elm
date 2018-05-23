@@ -12,9 +12,15 @@
 
       <div class="guess_city">
         <span>武汉</span>
-        <span class="arrow_right"></span>
+        <svg class="icon arrow_right" aria-hidden="true">
+          <use xlink:href="#icon-gengduo"></use>
+        </svg>
       </div>
     </nav>
+
+    <section class="hot_city_container">
+      <h4 class="hot_city_title">热门城市</h4>
+    </section>
   </div>
 </template>
 

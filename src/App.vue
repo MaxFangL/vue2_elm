@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import './components/common/svg'
 export default {
   name: 'App'
 }
