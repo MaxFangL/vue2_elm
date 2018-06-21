@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-top>
+    <head-top signin-up='home'>
       <span slot="logo" class="head_logo" @click="reload">elm</span>
     </head-top>
 

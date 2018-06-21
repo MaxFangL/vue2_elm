@@ -1,6 +1,7 @@
 import App from '../App'
-import home from '../page/home/home'
-import login from '../page/login/login'
+
+const home = r => require.ensure([], () => r(require('../page/home/home')), 'home')
+const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
 
 export default [{
   path: '/',
