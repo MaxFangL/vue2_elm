@@ -11,8 +11,7 @@
         <input v-else type="text" placeholder="密码" v-model="passWord">
         <div class="button_switch" :class="{change_to_text: showPassWord}">
           <div class="cricle_botton"></div>
-          <span>abc</span>
-          <span>...</span>
+          ...
         </div>
       </section>
       <section class="input_container">
@@ -30,7 +29,7 @@
         <p>温馨提示：未注册过的账号，登录时将自动注册</p>
         <p>注册过的用户可凭账号密码登录</p>
     </section>
-    <button class="login_container"></button>
+    <button class="login_btn">登录</button>
   </div>
 </template>
 
@@ -89,7 +88,14 @@ export default {
     }
   }
 
+  // 密码切换
   .button_switch {
+    // display: flex;
+    padding: 0 0.3rem;
+    .wh(2rem, .8rem);
+    .sc(.6rem, #999);
+    border: 1px solid #ddd;
+    border-radius: 0.4rem;
   }
 
   .login_message {
@@ -98,5 +104,22 @@ export default {
       padding: .4rem .6rem;
       line-height: 0.5rem;
     }
+  }
+
+  // 登录按钮
+  .login_btn {
+    display: block;
+    margin: .5rem auto;
+    .sc(.7rem, #fff);
+    width: 85%;
+    height: 2.1rem;
+    background-color: #4cd96f;
+    line-height: 2.1rem;
+    border-radius: .15rem;
+  }
+
+  // 切换按钮背景色
+  .change_to_text {
+    background-color: #4cd96f;
   }
 </style>
