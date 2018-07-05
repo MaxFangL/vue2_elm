@@ -9,9 +9,9 @@
       <section class="input_container">
         <input v-if="!showPassWord" v-model="passWord" type="password" placeholder="密码">
         <input v-else type="text" placeholder="密码" v-model="passWord">
-        <div class="button_switch" :class="{change_to_text: showPassWord}">
+        <div @click="changePassWordType" class="button_switch" :class="[showPassWord ? 'change_to_text' : 'change_to_password']">
           <div class="cricle_botton"></div>
-          ...
+          {{ showPassWord ? 'abc' : '···' }}
         </div>
       </section>
       <section class="input_container">
@@ -35,6 +35,7 @@
 
 <script>
 import headTop from '../../components/header/head'
+import alertMsg from '../../components/common/alertMsg'
 
 export default {
   data () {
@@ -51,12 +52,13 @@ export default {
     this.getCapchaCode()
   },
   components: {
-    headTop
+    headTop,
+    alertMsg
   },
   methods: {
     // 是否显示密码
     changePassWordType () {
-      this.showPassword = !this.showPassword
+      this.showPassWord = !this.showPassWord
     },
     // 获取验证码，开发使用固定图片，生产环境使用真实验证码
     async getCapchaCode () {
@@ -90,12 +92,27 @@ export default {
 
   // 密码切换
   .button_switch {
-    // display: flex;
+    display: flex;
+    position: relative;
     padding: 0 0.3rem;
     .wh(2rem, .8rem);
     .sc(.6rem, #999);
     border: 1px solid #ddd;
     border-radius: 0.4rem;
+    align-items: center;
+    transition: background-color, .3s, border-color, .3s;
+    > .cricle_botton {
+      position: absolute;
+      top: -0.05rem;
+      left: -0.05rem;
+      width: 0.8rem;
+      height: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      background-color: #fff;
+      box-shadow: 0 0.1rem 0.2rem 0 rgba(0, 0, 0, .1);
+      transition: transform .3s;
+    }
   }
 
   .login_message {
@@ -120,6 +137,14 @@ export default {
 
   // 切换按钮背景色
   .change_to_text {
-    background-color: #4cd96f;
+    justify-content: flex-start;
+    background-color: #3190e8;
+    color: #fff;
+    > .cricle_botton {
+      transform: translate3d(1.2rem, 0, 0);
+    }
+  }
+  .change_to_password {
+    justify-content: flex-end;
   }
 </style>
