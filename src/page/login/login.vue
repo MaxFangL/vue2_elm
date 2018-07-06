@@ -14,11 +14,11 @@
           {{ showPassWord ? 'abc' : '···' }}
         </div>
       </section>
-      <section class="input_container">
+      <section class="input_container captchas_container">
         <input type="text" placeholder="验证码" maxlength="4" v-model="verifyCode">
         <div class="change_img_container">
           <img v-show="captchaCodeImg" :src="captchaCodeImg">
-          <div class="change_img" @click="getCapchaCode">
+          <div class="change_img" @click="getCaptchaCode">
             <p>看不清</p>
             <p>换一张</p>
           </div>
@@ -29,13 +29,16 @@
         <p>温馨提示：未注册过的账号，登录时将自动注册</p>
         <p>注册过的用户可凭账号密码登录</p>
     </section>
-    <button class="login_btn">登录</button>
+    <button class="login_btn" @click="mobileLogin">登录</button>
+    <alert-msg v-if="showAlertMsg" @closeMsg="closeMsg" :alertText="alertText"></alert-msg>
   </div>
 </template>
 
 <script>
 import headTop from '../../components/header/head'
 import alertMsg from '../../components/common/alertMsg'
+import {getCaptchas, accountLogin} from '../../service/getData'
+import {mapMutations} from 'vuex'
 
 export default {
   data () {
@@ -44,24 +47,73 @@ export default {
       passWord: null, // 密码
       showPassWord: false, // 是否显示密码
       verifyCode: null, // 验证码
-      captchaCodeImg: null // 验证码图片地址
+      captchaCodeImg: null, // 验证码图片地址
+      showAlertMsg: false, // 显示提示消息组件
+      alertText: null, // 提示消息内容
+      phoneNumber: null, // 电话号码
+      loginWay: false, // 登录方式 默认账号登录
+      userInfo: null, // 获取到的用户信息
+      messagesCode: null // 短信验证码
     }
   },
   // 模板渲染前调用
   created () {
-    this.getCapchaCode()
+    this.getCaptchaCode()
   },
   components: {
     headTop,
     alertMsg
   },
+  computed: {
+    // 判断是否手机号码
+    isPhoneNumber: () => {
+      /^1\d{10}$/gi.test(this.phoneNumber)
+    }
+  },
   methods: {
+    ...mapMutations([
+      'RECORD_USERINFO'
+    ]),
     // 是否显示密码
     changePassWordType () {
       this.showPassWord = !this.showPassWord
     },
     // 获取验证码，开发使用固定图片，生产环境使用真实验证码
-    async getCapchaCode () {
+    async getCaptchaCode () {
+      let res = await getCaptchas()
+      this.captchaCodeImg = res.data.code
+    },
+    // 发送登录信息
+    async mobileLogin () {
+      if (!this.loginWay) {
+        if (!this.userAccount) {
+          this.showAlertMsg = true
+          this.alertText = '请输入手机号/邮箱/用户名'
+          return
+        } else if (!this.passWord) {
+          this.showAlertMsg = true
+          this.alertText = '请输入密码'
+          return
+        } else if (!this.verifyCode) {
+          this.showAlertMsg = true
+          this.alertText = '请输入验证码'
+          return
+        }
+        this.userInfo = await accountLogin(this.userAccount, this.passWord, this.verifyCode)
+        console.log(this.userInfo)
+      }
+      if (!this.userInfo.user_id) {
+        this.showAlertMsg = true
+        this.alertText = this.userInfo.data.message
+        if (!this.loginWay) this.getCaptchaCode()
+      } else {
+        this.RECORD_USERINFO(this.userInfo.data)
+        this.$router.go(-1)
+      }
+    },
+    // 关闭消息弹出框
+    closeMsg () {
+      this.showAlertMsg = false
     }
   }
 }
@@ -112,6 +164,32 @@ export default {
       background-color: #fff;
       box-shadow: 0 0.1rem 0.2rem 0 rgba(0, 0, 0, .1);
       transition: transform .3s;
+    }
+  }
+
+  // 验证码
+  .captchas_container {
+    height: 2.2rem;
+    .change_img_container {
+      display: flex;
+      align-items: center;
+      img {
+        .wh(3.5rem, 1.5rem);
+        margin-right: .2rem;
+      }
+      .change_img {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        p {
+          .sc(.55rem, #666);
+        }
+        p:nth-of-type(2) {
+          color: #3190e8;
+          margin-top: .2rem;
+        }
+      }
     }
   }
 

@@ -1,7 +1,8 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://cangdu.org:8001'
-
+axios.defaults.baseURL = 'https://elm.cangdu.org'
+axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 /**
  * 获取首页默认地址
 */
@@ -23,4 +24,18 @@ export const groupCity = () => axios('/v1/cities', {
   params: {
     type: 'group'
   }
+})
+
+/**
+ * 获取短信验证码
+ */
+export const getCaptchas = () => axios.post('/v1/captchas')
+
+/**
+ * 账号密码登录
+ */
+export const accountLogin = (username, password, captcha_code) => axios.post('/v2/login', {
+  username: username,
+  password: password,
+  captcha_code: captcha_code
 })
