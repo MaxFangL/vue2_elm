@@ -1,8 +1,10 @@
 import axios from 'axios'
+import qs from 'qs'
 
 axios.defaults.baseURL = 'https://elm.cangdu.org'
-axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
+// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+axios.defaults.withCredentials = true
 /**
  * 获取首页默认地址
 */
@@ -34,8 +36,9 @@ export const getCaptchas = () => axios.post('/v1/captchas')
 /**
  * 账号密码登录
  */
-export const accountLogin = (username, password, captcha_code) => axios.post('/v2/login', {
+export const accountLogin = (username, password, captcha_code) => axios.post('/v2/login', qs.stringify({
   username: username,
   password: password,
   captcha_code: captcha_code
 })
+).then(res => res.data)

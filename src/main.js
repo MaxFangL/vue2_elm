@@ -6,7 +6,9 @@ import VueRouter from 'vue-router'
 import routes from './router/router'
 import './config/rem'
 import axios from 'axios'
+// import qs from 'qs'
 
+// asios添加到Vue.prototype
 Vue.prototype.$http = axios
 
 Vue.use(VueRouter)

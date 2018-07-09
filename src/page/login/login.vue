@@ -104,11 +104,12 @@ export default {
       }
       if (!this.userInfo.user_id) {
         this.showAlertMsg = true
-        this.alertText = this.userInfo.data.message
+        this.alertText = this.userInfo.message
         if (!this.loginWay) this.getCaptchaCode()
       } else {
-        this.RECORD_USERINFO(this.userInfo.data)
+        // this.RECORD_USERINFO(this.userInfo.data)
         this.$router.go(-1)
+        console.log('成功')
       }
     },
     // 关闭消息弹出框

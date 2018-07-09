@@ -12,6 +12,7 @@
     <section class="head_title" v-if="headTitle">
       <span class="title_text">{{headTitle}}</span>
     </section>
+    <slot name="changeCity"></slot>
   </header>
 </template>
 

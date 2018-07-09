@@ -11,12 +11,12 @@
         <span>定位不准时，请在城市列表中选择</span>
       </div>
 
-      <div class="guess_city">
+      <router-link :to="'/city'" class="guess_city">
         <span>{{guessCity}}</span>
         <svg class="icon arrow_right" aria-hidden="true">
           <use xlink:href="#icon-gengduo"></use>
         </svg>
-      </div>
+      </router-link>
     </nav>
 
     <!-- 热门城市列表 -->
