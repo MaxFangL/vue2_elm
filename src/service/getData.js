@@ -42,3 +42,17 @@ export const accountLogin = (username, password, captcha_code) => axios.post('/v
   captcha_code: captcha_code
 })
 ).then(res => res.data)
+
+/**
+ * 获取当前所在城市
+ */
+export const currentCity = number => axios('/v1/cities/' + number)
+
+/**
+ * 获取搜索地址
+ */
+export const seachCity = (cityId, value) => axios('/v1/pois', {
+  type: 'search',
+  city_id: cityId,
+  keyword: value
+})
