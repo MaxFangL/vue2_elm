@@ -69,7 +69,7 @@
 
 <script>
 import headTop from '../../components/header/head'
-// import { currentCity, seachCity } from '../../service/getData.js'
+import { currentCity } from '../../service/getData.js'
 
 export default {
   data () {
@@ -82,6 +82,10 @@ export default {
 
   mounted () {
     this.cityId = this.$route.params.cityId
+    // 获取当前城市名字
+    currentCity(this.cityId).then(res => {
+      this.cityName = res.data.name
+    })
   },
   components: {
     headTop

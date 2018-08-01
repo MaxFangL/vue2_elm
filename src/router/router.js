@@ -21,7 +21,7 @@ export default [{
       component: login
     },
     {
-      path: '/city',
+      path: '/city/:cityId',
       component: city
     }
   ]
