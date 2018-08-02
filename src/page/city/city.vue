@@ -4,79 +4,41 @@
       <router-link to="/home" slot="changeCity" class="change_city">切换城市</router-link>
     </head-top>
 
-    <div class="serch_contariner">
-      <input type="text" class="city_input input_style" placeholder="请输入学校、商务楼、地址">
-      <input type="submit" class="city_submit input_style" value="搜索">
-    </div>
+    <form class="serch_contariner" v-on:submit.prevent>
+      <input v-model="inputValue" type="text" class="city_input input_style" placeholder="请输入学校、商务楼、地址" required>
+      <input @click="postPois" type="submit" class="city_submit input_style" value="搜索">
+    </form>
 
     <div class="serch_list_container">
-      <div class="serch_history_title">搜索历史</div>
+      <div v-if="historyTitle" class="serch_history_title">搜索历史</div>
       <ul class="serch_address_ul">
-        <li>
-          <h4 class="address_title ellipsis">北部的说法是否发生时</h4>
-          <p class="address_describe ellipsis">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
-        </li>
-        <li>
-          <h4 class="address_title">北部的说法是否发生时</h4>
-          <p class="address_describe">收到了深刻的价格开始的感慨是读后感</p>
+        <li v-for="(item, index) in addressList" @click="goNextPage(index, item.geohash)" :key="index">
+          <h4 class="address_title ellipsis">{{item.name}}</h4>
+          <p class="address_describe ellipsis">{{item.address}}</p>
         </li>
       </ul>
 
-      <div class="clear_history">清除所有</div>
+      <div v-if="historyTitle&&addressList.length" @click="clearAll" class="clear_history">清除所有</div>
     </div>
+    <div v-if="searchMsg" class="search_message">很抱歉，无搜索结果！</div>
   </div>
 </template>
 
 <script>
 import headTop from '../../components/header/head'
-import { currentCity } from '../../service/getData.js'
+import { currentCity, searchAddress } from '../../service/getData.js'
+import { getStore, setStore, removeStore } from '../../config/mUtils.js'
 
 export default {
   data () {
     return {
       inputValue: '', // 搜索地址
       cityId: '', // 当前城市id
-      cityName: '' // 当前城市名字
+      cityName: '', // 当前城市名字
+      historyTitle: true, // 默认显示搜索历史标题
+      addressList: [], // 搜索地址列表
+      historyAddress: [], // 历史搜索记录
+      searchMsg: false // 搜索无结果，显示提示信息，默认隐藏
     }
   },
 
@@ -86,12 +48,61 @@ export default {
     currentCity(this.cityId).then(res => {
       this.cityName = res.data.name
     })
+    // 获取历史纪录
+    this.initData()
   },
   components: {
     headTop
   },
 
   methods: {
+    // 初始化显示搜索历史纪录
+    initData () {
+      if (getStore('historyAddress')) {
+        this.addressList = JSON.parse(getStore('historyAddress'))
+      } else {
+        this.addressList = []
+      }
+    },
+    // 发送地址搜索信息
+    postPois () {
+      if (this.inputValue) {
+        searchAddress(this.cityId, this.inputValue).then(res => {
+          this.historyTitle = false
+          this.addressList = res
+          this.searchMsg = res.length === 0
+          console.log(res)
+        })
+      }
+    },
+    /**
+     * 点击搜索结果，判断是否有重复的历史纪录
+     * 没有则新增，有则不重复存储，判断完成后进入下一个页面
+     */
+    goNextPage (index, geohash) {
+      let history = getStore('historyAddress')
+      let chooseAddress = this.addressList[index]
+      if (history) {
+        let checkRepeat = false
+        this.historyAddress = JSON.parse(history)
+        this.historyAddress.forEach(element => {
+          if (element.geohash === geohash) {
+            checkRepeat = true
+          }
+        })
+        if (!checkRepeat) {
+          this.historyAddress.push(chooseAddress)
+        }
+      } else {
+        this.historyAddress.push(chooseAddress)
+      }
+      setStore('historyAddress', this.historyAddress)
+    },
+    // 清除所有历史纪录
+    clearAll () {
+      removeStore('historyAddress')
+      this.initData()
+    }
   },
 
   computed: {
@@ -168,5 +179,13 @@ export default {
       line-height: 2rem;
       background-color: #fff;
     }
+  }
+
+  .search_message {
+    // margin: 0 auto;
+    .font(.65rem, 1.75rem);
+    color: #333;
+    background-color: #fff;
+    text-indent: .5rem;
   }
 </style>
